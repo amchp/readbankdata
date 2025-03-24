@@ -39,12 +39,7 @@ func main() {
         log.Fatal(err)
         return
     }
-    bankReaderService, err := GetBankReaderService(bankReaderType)
-    if err != nil{
-        log.Fatal(err)
-        return
-    }
-    data, err := bankReaderService.bankReader.ReadFile(argsMap["filename"])
+    data, err := ReadBankData(argsMap["filename"], bankReaderType)
     if err != nil{
         log.Fatal(err)
         return
@@ -52,6 +47,18 @@ func main() {
     for _, dt := range data{
         fmt.Println(dt)
     }
+}
+
+func ReadBankData(filename string, bankReaderType BankReaderEnum) ([]bankreaders.BankData, error){
+    bankReaderService, err := GetBankReaderService(bankReaderType)
+    if err != nil{
+        return nil, err
+    }
+    data, err := bankReaderService.bankReader.ReadFile(filename)
+    if err != nil{
+        return nil, err
+    }
+    return data, nil
 }
 
 var bankReaderMap = map[string]BankReaderEnum{
